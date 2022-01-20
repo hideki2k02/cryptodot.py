@@ -1,0 +1,6 @@
+# Batch Files for testing
+*crypt.bat
+
+# Ignored Folders
+__pycache__
+nodes
