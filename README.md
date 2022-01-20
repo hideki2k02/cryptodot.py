@@ -46,7 +46,9 @@ Just don't use something simple as your Birthday, your Friends may guess it.
 **10c8 (My Teacher)**
 
 **[pyperclip 1.8.2](https://pypi.org/project/pyperclip/) (Clipboard Access)**
+
 **[pyqt5 5.15.6](https://pypi.org/project/PyQt5/) for GUI**
+
 **[PyCryptodome 3.12.0](https://pypi.org/project/pycryptodome/) for generating Hashes and AES**
 
 ## To-do list
