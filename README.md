@@ -38,6 +38,7 @@ Nodes are just Fancy names. Thats all.
 **Node Content: Data Input/Output (depends on the operation; Will create [AES data](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) if you are encrypting)**
 
 **Node Signature (Optional): Hash generated when Encrypting a Node. Used to validate the authenticity of the file**
+
 **Node Name (Optional): File Name ([cSHAKE256 Hash](https://www.pycryptodome.org/en/latest/src/hash/cshake256.html) generated from the sum of the Key and the Address)**
 
 Just don't use something simple as your Birthday, your Friends may guess it.
