@@ -23,15 +23,15 @@ if __name__ == "__main__":
                 input_node_name = input("Node Name: ")
 
                 if(operation == "encrypt"):
-                    print("Operation: Encrypt New Node\n")
+                    print("\nOperation: Encrypt New Node\n")
                     node_name, cipher_nonce, cipher_text = new_file(input_node_name, node_key, node_address)
 
-                    write_file(f"nodes/{node_name}", cipher_nonce, cipher_text)
+                    write_file(f"nodes/{node_name}", cipher_nonce, cipher_text, True)
             
                 else:
                     node_signature = sys.argv[4]
 
-                    print("Operation: Decrypt Node\n")
+                    print("\nOperation: Decrypt Node\n")
                     decrypted_node = load_file(input_node_name, node_key, node_address)
 
                     pyperclip.copy(decrypted_node)

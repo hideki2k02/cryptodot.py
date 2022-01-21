@@ -5,7 +5,7 @@ from base64 import b64decode
 import sys
 import binascii
 
-def load_file(node_name, node_key, node_address = "", node_signature = "NONE", node_path = ""):
+def load_file(node_name, node_key, node_address = "", node_signature = "", node_path = ""):
     try:
         node_key_bytes = process_input(node_key, node_address)
 
@@ -40,12 +40,22 @@ def load_file(node_name, node_key, node_address = "", node_signature = "NONE", n
                 #print(line)
                 file_content += line
 
-            if node_signature == "NONE":
+            if len(node_signature) == 0:
+                empty_signature = "No Signature value was passed, therefore no check will be run.\n"
+
+                if(core.debug):
+                    print("Current Node Signature is Empty!")
+                    print(f"Sys.argv4 Length: {len(sys.argv[4])}")
+
                 try:
-                    node_signature = sys.argv[5]
+                    if len(sys.argv[4]) > 0:
+                        node_signature = sys.argv[4]
+
+                    else: 
+                        print(empty_signature)
 
                 except IndexError:
-                    print("No Signature value was passed, therefore no check will be run.\n")
+                    print(empty_signature)
 
             if(core.debug):   
                 print(f"NONCE: {file_nonce}")
@@ -59,7 +69,7 @@ def load_file(node_name, node_key, node_address = "", node_signature = "NONE", n
 
                 print("Ok! Node was successfully decrypted!")
 
-                if(node_signature != "NONE"):
+                if(len(node_signature) > 0):
                     try:
                         print("\nChecking File Signature... ", end="")
 
@@ -71,7 +81,7 @@ def load_file(node_name, node_key, node_address = "", node_signature = "NONE", n
                         print("Signature Check Failed: Invalid Hash!")
 
                     except ValueError:
-                            print("Signature Check Failed: ")
+                            print("Signature Check Failed: Wrong Hash!")
 
                 return node_content
 

@@ -34,14 +34,14 @@ class App_GUI(QMainWindow):
         self.node_key.setEchoMode(QLineEdit.Password)
         self.inputs_layout.addWidget(self.node_key_label)
         self.inputs_layout.addWidget(self.node_key)
-        self.node_key.editingFinished.connect(self.validate_form)
+        self.node_key.textEdited.connect(self.validate_form)
 
         # Node Address LineEdit, Label and its events (Node Address is an extra parameter for the Hashes)
         self.node_address_label = QLabel("Node Address (Hash Modifier)")
         self.node_address = QLineEdit()
         self.inputs_layout.addWidget(self.node_address_label)
         self.inputs_layout.addWidget(self.node_address)
-        self.node_address.editingFinished.connect(self.validate_form)
+        self.node_address.textEdited.connect(self.validate_form)
 
         # Node Content LineEdit, Label (Node Address is an extra parameter for the Hashes)
         self.node_content_label = QLabel("Node Content")
@@ -85,14 +85,18 @@ class App_GUI(QMainWindow):
         if(core.debug):
             print("Save File Button was pressed! Opening File Dialog...")
 
-        node_name_bytes, cipher_nonce, cipher_text = new_file(None, self.node_key.text(), self.node_address.text())
+        node_name_bytes, cipher_nonce, cipher_text = new_file(None, 
+            self.node_key.text(), 
+            self.node_address.text(), 
+            self.node_content.toPlainText()
+        )
 
         node_path = QFileDialog.getSaveFileName(self, "ITS NOT RECOMMENDED TO CHANGE THE FILE NAME", 
             f"nodes/{node_name_bytes}"
         )
 
         if node_path[0] != "":
-            write_file(node_path[0], cipher_nonce, cipher_text)
+            write_file(node_path[0], cipher_nonce, cipher_text, False)
 
     def on_load_file_button_press(self):
         if(core.debug): 
