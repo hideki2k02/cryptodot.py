@@ -48,4 +48,4 @@ Just don't use something simple as your Birthday, your Friends may guess it.
 ## To-do list (Feel free to suggest anything)
 - [X] Finish the base code
 - [X] Rework the file format and how the functions work
-- [ ] Implement the GUI (WIP)
+- [X] Implement the GUI
