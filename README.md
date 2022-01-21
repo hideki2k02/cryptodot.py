@@ -12,15 +12,11 @@ There was an attempt to rebuild it in [Electron.js](https://en.wikipedia.org/wik
 Now that i've "gotten back on my feet" i want to finish what i've started a long time ago: CryptoDot.
 
 ## How does the program work?
-You can Encrypt any Text Data using: a **Node Name**, **Node Key** and a **Node Address**.
+You can Encrypt any Text Data using: a **Node Key** and a **Node Address**.
 
 The same goes for Decryption, but Decryption (optionally) requires the **Node Signature** to verify the file's authenticity.
 
-**Notes for Encryption: If a Node already exists with that name and address, it will OVERWRITE it! so be careful (Currently i don't intend to change this)**
-
-**If you are afraid to acidentally overwrite a Node, you can always save the Node Name and Address somewhere safe. Even if they have the name, they won't know whats inside without the password ;)**
-
-**(Not even me, thats the 🦆ing point anyway).**
+**Notes for Encryption: If a Node already exists with that name, it will OVERWRITE it! so be careful (Currently i don't intend to change this)**
 
 ## Is it safe?
 Yes. Theoretically not even [Fugaku (AKA World's Strongest Computer)](https://www.bbc.com/news/world-asia-53147684#:~:text=The%20newly%20crowned%20world's%20fastest,IBM%20machine%20in%20the%20US.) should be able to crack your Node any time soon (He's also busy fighting a Pandemic).
@@ -30,7 +26,6 @@ CryptoDot.py uses [Advanced Encryption Standard](https://en.wikipedia.org/wiki/A
 ## Nodes explained
 Nodes are just Fancy names. Thats all.
 
-
 **Node Key: Encryption Key (Converted to a [cSHAKE256 Hash](https://www.pycryptodome.org/en/latest/src/hash/cshake256.html))**
 
 **Node Address: An extra parameter used to make the Hashes stronger (Not the [Salt](https://en.wikipedia.org/wiki/Salt_(cryptography)))**
@@ -38,8 +33,6 @@ Nodes are just Fancy names. Thats all.
 **Node Content: Data Input/Output (depends on the operation; Will create [AES data](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) if you are encrypting)**
 
 **Node Signature (Optional): Hash generated when Encrypting a Node. Used to validate the authenticity of the file**
-
-**Node Name (Optional): File Name ([cSHAKE256 Hash](https://www.pycryptodome.org/en/latest/src/hash/cshake256.html) generated from the sum of the Key and the Address)**
 
 Just don't use something simple as your Birthday, your Friends may guess it.
 
