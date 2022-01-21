@@ -30,7 +30,6 @@ CryptoDot.py uses [Advanced Encryption Standard](https://en.wikipedia.org/wiki/A
 ## Nodes explained
 Nodes are just Fancy names. Thats all.
 
-**Node Name: File Name (Converted to a [cSHAKE256 Hash](https://www.pycryptodome.org/en/latest/src/hash/cshake256.html))**
 
 **Node Key: Encryption Key (Converted to a [cSHAKE256 Hash](https://www.pycryptodome.org/en/latest/src/hash/cshake256.html))**
 
@@ -38,7 +37,8 @@ Nodes are just Fancy names. Thats all.
 
 **Node Content: Data Input/Output (depends on the operation; Will create [AES data](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) if you are encrypting)**
 
-**Node Signature (Optional): The Hash generated when Encrypting a Node. Used to validate the authenticity of the file**
+**Node Signature (Optional): Hash generated when Encrypting a Node. Used to validate the authenticity of the file**
+**Node Name (Optional): File Name ([cSHAKE256 Hash](https://www.pycryptodome.org/en/latest/src/hash/cshake256.html) generated from the sum of the Key and the Address)**
 
 Just don't use something simple as your Birthday, your Friends may guess it.
 
@@ -51,6 +51,7 @@ Just don't use something simple as your Birthday, your Friends may guess it.
 
 **[PyCryptodome 3.12.0](https://pypi.org/project/pycryptodome/) for generating Hashes and AES**
 
-## To-do list
+## To-do list (Feel free to suggest anything)
 - [X] Finish the base code
-- [ ] Implement the GUI
+- [X] Rework the file format and how the functions work
+- [ ] Implement the GUI (WIP)
