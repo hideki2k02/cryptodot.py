@@ -1,4 +1,4 @@
 @ECHO OFF
-title CryptoDot Vampyre
-python vampyre-gui.py
+title CryptoDot.py
+cryptodot.py gui
 pause
