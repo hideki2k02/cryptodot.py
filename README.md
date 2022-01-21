@@ -16,8 +16,6 @@ You can Encrypt any Text Data using: a **Node Key** and a **Node Address**.
 
 The same goes for Decryption, but Decryption (optionally) requires the **Node Signature** to verify the file's authenticity.
 
-**Notes for Encryption: If a Node already exists with that name, it will OVERWRITE it! so be careful (Currently i don't intend to change this)**
-
 ## Is it safe?
 Yes. Theoretically not even [Fugaku (AKA World's Strongest Computer)](https://www.bbc.com/news/world-asia-53147684#:~:text=The%20newly%20crowned%20world's%20fastest,IBM%20machine%20in%20the%20US.) should be able to crack your Node any time soon (He's also busy fighting a Pandemic).
 
