@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
         print("""operation: The operation that will be done. Currently either "encrypt" or "decrypt".""")
         print("node_key: The Password for the file.")
-        print("node_address: Additional parameter to make the hashes stronger.")
+        print("node_address: Additional parameter that make the hashes stronger.")
         print("node_signature: Hash to verify the File's Integrity. Not necessary for Encryption.")
 
     try:
@@ -35,7 +35,7 @@ if __name__ == "__main__":
                     decrypted_node = load_file(input_node_name, node_key, node_address)
 
                     pyperclip.copy(decrypted_node)
-                    print("Ok! Decryption was a success! Contents copied to Clipboard.")
+                    print("Ok! Contents copied to Clipboard.")
 
             case "gui":
                 print("Opening GUI...\n")

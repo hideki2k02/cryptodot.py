@@ -37,14 +37,19 @@ Just don't use something simple as your Birthday, your Friends may guess it.
 ## Credits
 **10c8 (My Teacher)**
 
-**[pyperclip 1.8.2](https://pypi.org/project/pyperclip/) (Clipboard Access)**
+**[pyperclip 1.8.2](https://pypi.org/project/pyperclip/) for Clipboard Access (CLI Mode)**
 
 **[pyqt5 5.15.6](https://pypi.org/project/PyQt5/) for GUI**
 
 **[PyCryptodome 3.12.0](https://pypi.org/project/pycryptodome/) for generating Hashes and AES**
 
+**[TOML 0.10.2](https://pypi.org/project/toml/) for generating the config file**
+
 ## To-do list (Feel free to suggest anything)
 - [X] Finish the base code
 - [X] Rework the file format and how the functions work
 - [X] Implement the GUI
+- [X] Implement a Clear Node Button
+- [ ] Implement a decent config system using TOML
+- [ ] Implement Dark Mode
 - [ ] Fix my code

@@ -1,5 +1,5 @@
 @ECHO OFF
-title CryptoDot Vampyre - Installing requirements...
+title CryptoDot.py - Installing requirements...
 pip install -r requirements.txt
-title CryptoDot Vampyre - Installing requirements... Ok!
+title CryptoDot.py - Installing requirements... Ok!
 pause

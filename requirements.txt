@@ -1,3 +1,4 @@
 pycryptodome
 pyqt5
 pyperclip
+toml

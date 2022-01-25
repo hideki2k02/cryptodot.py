@@ -39,6 +39,7 @@ class App_GUI(QMainWindow):
         # Node Address LineEdit, Label and its events (Node Address is an extra parameter for the Hashes)
         self.node_address_label = QLabel("Node Address (Hash Modifier)")
         self.node_address = QLineEdit()
+        self.node_address.setEchoMode(QLineEdit.Password)
         self.inputs_layout.addWidget(self.node_address_label)
         self.inputs_layout.addWidget(self.node_address)
         self.node_address.textEdited.connect(self.validate_form)
@@ -60,6 +61,12 @@ class App_GUI(QMainWindow):
         self.load_file_button.setEnabled(False)
         self.load_file_button.clicked.connect(self.on_load_file_button_press)
         self.buttons_layout.addWidget(self.load_file_button)
+
+        # Clear Button and its Events
+        self.clear_content_button = QPushButton("Clear")
+        self.clear_content_button.setEnabled(True)
+        self.clear_content_button.clicked.connect(self.on_clear_content_button_press)
+        self.buttons_layout.addWidget(self.clear_content_button)
         
         # This will add the button_layout below the inputs_layout
         self.inputs_layout.addLayout(self.buttons_layout)
@@ -115,6 +122,12 @@ class App_GUI(QMainWindow):
             )
 
             self.node_content.setPlainText(decrypted_node)
+
+    def on_clear_content_button_press(self):
+        if(core.debug):
+            print("Clear Button pressed! clearing Node Content...")
+
+        self.node_content.clear()
 
 def gui():
     app = QApplication(sys.argv)
