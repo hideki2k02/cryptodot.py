@@ -4,3 +4,6 @@
 # Ignored Folders
 __pycache__
 nodes
+
+# Debug Files
+cryptodot.toml

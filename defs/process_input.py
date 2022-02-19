@@ -1,5 +1,5 @@
 from Crypto.Hash import cSHAKE256
-from defs import core
+from defs import config
 
 def process_input(input_data, modifier):
     minimum_required_lenght = len(input_data) >= 3 and len(modifier) >= 3
@@ -11,7 +11,9 @@ def process_input(input_data, modifier):
         # Update Input's Hash with a modifier (Normally the address)
         input_hash.update(bytes(modifier, "utf-8"))
 
-        if(core.debug):
+        print(config["dev"])
+
+        if(config["dev"]["debug"]):
             print(f"Processed Input Hash: {input_hash}")
 
         return input_hash.read(16)

@@ -1,5 +1,4 @@
 # PyQT5 GUI
-from platform import node
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel,  QHBoxLayout, QVBoxLayout, QWidget
 # from PyQt5.QtGui import QIcon
@@ -12,15 +11,16 @@ from defs.new_node_file import new_file, write_file
 from defs.load_node_file import load_file
 
 # Others
-from defs import core
+from defs import config
 import sys
 
-from defs.process_input import process_input
 
 class App_GUI(QMainWindow):
     def __init__(self):
         # I dont know what the fuck this does, but i guess its basically the Main() in C#
         super().__init__()
+
+        # print(config)
 
         self.window = QWidget()
         self.inputs_layout = QVBoxLayout()
@@ -71,12 +71,28 @@ class App_GUI(QMainWindow):
         # This will add the button_layout below the inputs_layout
         self.inputs_layout.addLayout(self.buttons_layout)
         self.window.setLayout(self.inputs_layout)
+        self.setCentralWidget(self.window)
+
+        # Sets the Window info, like minimum size, title and icon; Then displays it.
+        program_version = config["dev"]["program_version"]
 
         self.resize(500, 500)
         self.setMinimumSize(300, 300)
-        self.setWindowTitle(f'CryptoDot.py {core.program_version}')
+        self.setWindowTitle(f"CryptoDot.py - Version {program_version}")
         # self.setWindowIcon(QIcon('data/icons8-virus-free-50.png'))
-        self.setCentralWidget(self.window)
+
+        # Checks if the boolean "dark_mode" is true, if so use the "dark theme"
+        if config["user"]["dark_mode"]:
+            self.setStyleSheet("""
+                QWidget {
+                    background-color: #616161;
+                }
+
+                QPushButton { 
+                    background: yellow; 
+                    color: yellow;
+                }
+            """)
         
         self.show()
 
@@ -89,7 +105,7 @@ class App_GUI(QMainWindow):
         
     # Self must be included on those below, else it crashes (?)
     def on_save_file_button_press(self):
-        if(core.debug):
+        if(config["dev"]["debug"]):
             print("Save File Button was pressed! Opening File Dialog...")
 
         node_name_bytes, cipher_nonce, cipher_text = new_file(None, 
@@ -106,7 +122,7 @@ class App_GUI(QMainWindow):
             write_file(node_path[0], cipher_nonce, cipher_text, False)
 
     def on_load_file_button_press(self):
-        if(core.debug): 
+        if(config["dev"]["debug"]): 
             print("Load File Button was pressed! Opening File Dialog...")
 
         node_path = QFileDialog.getOpenFileName(self, "Select the Node File you want to open", "nodes")
@@ -124,7 +140,7 @@ class App_GUI(QMainWindow):
             self.node_content.setPlainText(decrypted_node)
 
     def on_clear_content_button_press(self):
-        if(core.debug):
+        if(config["dev"]["debug"]):
             print("Clear Button pressed! clearing Node Content...")
 
         self.node_content.clear()

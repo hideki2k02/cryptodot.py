@@ -1,4 +1,4 @@
-from defs import core, process_input
+from defs import process_input, config
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 from base64 import b64encode
@@ -24,7 +24,7 @@ def new_file(node_name, node_key, node_address, node_content = pyperclip.paste()
         print("Your Node Content/Clipboard is empty!")
         return
     
-    if(core.debug):
+    if(config["dev"]["debug"]):
         print("Node Key: ", node_key_bytes.hex())
         print("Node Name: ", node_name)
         print(f"Node Content: {node_content}\n")
@@ -45,7 +45,7 @@ def new_file(node_name, node_key, node_address, node_content = pyperclip.paste()
 
 
 def write_file(node_file_path, cipher_nonce, cipher_text, cli_overwrite_warning):
-    if(core.debug):
+    if(config["dev"]["debug"]):
         print(f"\nFile Path Passed to write_file: {node_file_path}")
 
     if cli_overwrite_warning:
