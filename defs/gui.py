@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QFileDialog, QLineEdit , QPushButton, QPlainTextEdit
 
 # New File and Load File Functions
 from defs.new_node import new_node, write_node_file
-from defs.load_node import load_node
+from defs.load_node import load_node, verify_node
 
 # Others
 from defs import config, program_version
@@ -128,16 +128,33 @@ class App_GUI(QMainWindow):
         node_path = QFileDialog.getOpenFileName(self, "Select the Node File you want to open", "nodes")
 
         if node_path[0] != "":
-            node_signature = QInputDialog.getText(self, "Insert the File Signature:", "File Signature:")
-            
-            decrypted_node = load_node(None, 
-                self.node_key.text(), 
-                self.node_address.text(), 
-                node_signature[0], 
-                node_path[0]
-            )
+            print_debug(f"Passed Node Path: {node_path[0]}")
 
-            self.node_content.setPlainText(decrypted_node)
+            try:
+                decrypted_node, node_signature, cipher_object = load_node(
+                    None, # Would be node_name if it was CLI Mode
+                    self.node_key.text(), 
+                    self.node_address.text(), 
+                    None, # Would be node_signature if it was CLI Mode
+                    node_path[0]
+                )
+
+                print_debug(f"Node Signature on File: {node_signature}")                
+
+                if node_signature == None:
+                    node_signature = QInputDialog.getText(self, "Insert the File Signature:", "File Signature:")
+
+                print_debug(f"Passed Node Signature: {node_signature[0]}")
+                verify_node(cipher_object, node_signature[0])
+
+                self.node_content.setPlainText(decrypted_node)
+
+            # In case it fails (probably invalid key)
+            except:
+                return
+
+        else:
+            print_debug("Node Loading Cancelled!")
 
     def on_clear_content_button_press(self):
         print_debug("Clear Button pressed! clearing Node Content...")
