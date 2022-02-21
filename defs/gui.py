@@ -121,6 +121,10 @@ class App_GUI(QMainWindow):
         if node_path[0] != "":
             write_node_file(node_path[0], cipher_nonce, cipher_text, False)
 
+        else:
+            if(config["dev"]["debug"]):
+                print("Node Creation Cancelled!")
+
     def on_load_file_button_press(self):
         if(config["dev"]["debug"]): 
             print("Load File Button was pressed! Opening File Dialog...")

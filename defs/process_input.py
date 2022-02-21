@@ -1,7 +1,7 @@
 from Crypto.Hash import cSHAKE256
-from defs import config
+from defs.japa4551 import *
 
-def verify_input(input_data, modifier):
+def process_input(input_data, modifier):
     minimum_required_lenght = len(input_data) >= 3 and len(modifier) >= 3
 
     if minimum_required_lenght: 
@@ -11,8 +11,7 @@ def verify_input(input_data, modifier):
         # Update Input's Hash with a modifier (Normally the address)
         input_hash.update(bytes(modifier, "utf-8"))
 
-        if(config["dev"]["debug"]):
-            print(f"Minimum Required Length reached! Processed Input Hash: {input_hash}")
+        print_debug(f"Minimum Required Length reached! Processed Input Hash: {input_hash}")
 
         return input_hash.read(16)
 

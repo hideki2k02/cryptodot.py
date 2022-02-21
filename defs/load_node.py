@@ -1,5 +1,6 @@
 from defs import config
-from defs.verify_input import verify_input
+from defs.process_input import process_input
+from defs.japa4551 import *
 
 from Crypto.Cipher import AES
 from base64 import b64decode
@@ -8,7 +9,7 @@ import binascii
 
 def load_node(node_name, node_key, node_address = "", node_signature = "", node_path = ""):
     try:
-        node_key_bytes = verify_input(node_key, node_address)
+        node_key_bytes = process_input(node_key, node_address)
 
         if node_path == "":
             node_path = f"nodes/{node_name}"
@@ -17,10 +18,9 @@ def load_node(node_name, node_key, node_address = "", node_signature = "", node_
             header = file.readline(9)
             file_version = bytes(file.readline().replace("\n", ""), "utf-8").hex()
             file_nonce = ""
-            
-            if(config["dev"]["debug"]):   
-                print(f"Header: {header}")
-                print(f"File Version: {file_version}")
+              
+            print_debug(f"Header: {header}")
+            print_debug(f"File Version: {file_version}")
 
             if header != config["dev"]["format_header"]:
                 raise ValueError("Invalid Header! The file read is not a CryptoDot file or the Header is invalid/corrupt!")
@@ -44,9 +44,8 @@ def load_node(node_name, node_key, node_address = "", node_signature = "", node_
             if len(node_signature) == 0:
                 empty_signature = "No Signature value was passed, therefore no check will be run.\n"
 
-                if(config["dev"]["debug"]):
-                    print("Current Node Signature is Empty!")
-                    print(f"Sys.argv4 Length: {len(sys.argv[4])}")
+                print_debug("Current Node Signature is Empty!")
+                print_debug(f"Sys.argv4 Length: {len(sys.argv[4])}")
 
                 try:
                     if len(sys.argv[4]) > 0:
@@ -57,11 +56,10 @@ def load_node(node_name, node_key, node_address = "", node_signature = "", node_
 
                 except IndexError:
                     print(empty_signature)
-
-            if(config["dev"]["debug"]):   
-                print(f"NONCE: {file_nonce}")
-                print(f"Encrypted Content: {file_content}")
-                print(f"Signature: {node_signature}\n")
+ 
+                print_debug(f"NONCE: {file_nonce}")
+                print_debug(f"Encrypted Content: {file_content}")
+                print_debug(f"Signature: {node_signature}\n")
 
             try:
                 cipher = AES.new(node_key_bytes, AES.MODE_GCM, nonce=b64decode(file_nonce))
