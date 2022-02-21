@@ -60,10 +60,8 @@ def write_node_file(node_file_path, cipher_nonce, cipher_text, cipher_signature,
             print("")
 
     file = open(node_file_path, "w")
-    file.write(f"CRYPTODOT{current_format_version}")
-    file.write(cipher_signature)
-    file.write(cipher_nonce)
-    file.write(cipher_text)
+    file.write(f"CRYPTODOT{current_format_version}\n{cipher_signature}\n")
+    file.write(f"{cipher_nonce}\n{cipher_text}")
     file.close()
 
     print_debug("Node Created!")

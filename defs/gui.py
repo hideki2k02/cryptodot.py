@@ -12,7 +12,7 @@ from defs.load_node import load_node
 
 # Others
 from defs import config, program_version
-from japa4551 import *
+from defs.japa4551 import *
 import sys
 
 

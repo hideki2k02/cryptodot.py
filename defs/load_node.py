@@ -32,6 +32,10 @@ def load_node(node_name, node_key, node_address = "", node_signature = "NONE", n
 
                     # print("File version: 1")
 
+                case "02":
+                    node_signature = file.readline().replace("\n", "")
+                    file_nonce = file.readline().replace("\n", "")
+
                 case _:
                     raise ValueError("Invalid File Version!")
 
@@ -47,11 +51,15 @@ def load_node(node_name, node_key, node_address = "", node_signature = "NONE", n
                 try:
                     if len(sys.argv[4]) > 0:
                             node_signature = sys.argv[4]
+                            
+                            print_debug(f"Signature: {node_signature}", False)
 
                 except IndexError: 
                     print(empty_signature)
- 
-            print_debug(f"Signature: {node_signature}\n", False)
+
+            else:
+                print_debug(f"Signature: {node_signature}", False)
+
             print_debug(f"NONCE: {file_nonce}", False)
             print_debug(f"Encrypted Content: {file_content}", False)
 
