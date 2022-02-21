@@ -22,7 +22,6 @@ def generate_config():
 
         "dev": {
             "format_header": "CRYPTODOT",
-            "program_version": 1.1,
             "debug": False
         }
     }

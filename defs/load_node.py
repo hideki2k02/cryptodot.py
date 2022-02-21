@@ -7,7 +7,7 @@ from base64 import b64decode
 import sys
 import binascii
 
-def load_node(node_name, node_key, node_address = "", node_signature = "", node_path = ""):
+def load_node(node_name, node_key, node_address = "", node_signature = "NONE", node_path = ""):
     try:
         node_key_bytes = process_input(node_key, node_address)
 
@@ -19,7 +19,7 @@ def load_node(node_name, node_key, node_address = "", node_signature = "", node_
             file_version = bytes(file.readline().replace("\n", ""), "utf-8").hex()
             file_nonce = ""
               
-            print_debug(f"Header: {header}")
+            print_debug(f"Header: {header}", False)
             print_debug(f"File Version: {file_version}")
 
             if header != config["dev"]["format_header"]:
@@ -44,22 +44,16 @@ def load_node(node_name, node_key, node_address = "", node_signature = "", node_
             if len(node_signature) == 0:
                 empty_signature = "No Signature value was passed, therefore no check will be run.\n"
 
-                print_debug("Current Node Signature is Empty!")
-                print_debug(f"Sys.argv4 Length: {len(sys.argv[4])}")
-
                 try:
                     if len(sys.argv[4]) > 0:
-                        node_signature = sys.argv[4]
+                            node_signature = sys.argv[4]
 
-                    else: 
-                        print(empty_signature)
-
-                except IndexError:
+                except IndexError: 
                     print(empty_signature)
  
-                print_debug(f"NONCE: {file_nonce}")
-                print_debug(f"Encrypted Content: {file_content}")
-                print_debug(f"Signature: {node_signature}\n")
+            print_debug(f"Signature: {node_signature}\n", False)
+            print_debug(f"NONCE: {file_nonce}", False)
+            print_debug(f"Encrypted Content: {file_content}", False)
 
             try:
                 cipher = AES.new(node_key_bytes, AES.MODE_GCM, nonce=b64decode(file_nonce))

@@ -11,7 +11,8 @@ from defs.new_node import new_node, write_node_file
 from defs.load_node import load_node
 
 # Others
-from defs import config
+from defs import config, program_version
+from japa4551 import *
 import sys
 
 
@@ -74,8 +75,6 @@ class App_GUI(QMainWindow):
         self.setCentralWidget(self.window)
 
         # Sets the Window info, like minimum size, title and icon; Then displays it.
-        program_version = config["dev"]["program_version"]
-
         self.resize(500, 500)
         self.setMinimumSize(300, 300)
         self.setWindowTitle(f"CryptoDot.py - Version {program_version}")
@@ -105,10 +104,9 @@ class App_GUI(QMainWindow):
         
     # Self must be included on those below, else it crashes (?)
     def on_save_file_button_press(self):
-        if(config["dev"]["debug"]):
-            print("Save File Button was pressed! Opening File Dialog...")
+        print_debug("Save File Button was pressed! Opening File Dialog...")
 
-        node_name_bytes, cipher_nonce, cipher_text = new_node(None, 
+        node_name_bytes, cipher_nonce, cipher_text, cipher_signature = new_node(None, 
             self.node_key.text(), 
             self.node_address.text(), 
             self.node_content.toPlainText()
@@ -119,15 +117,13 @@ class App_GUI(QMainWindow):
         )
 
         if node_path[0] != "":
-            write_node_file(node_path[0], cipher_nonce, cipher_text, False)
+            write_node_file(node_path[0], cipher_nonce, cipher_text, cipher_signature, False)
 
         else:
-            if(config["dev"]["debug"]):
-                print("Node Creation Cancelled!")
+            print_debug("Node Creation Cancelled!")
 
     def on_load_file_button_press(self):
-        if(config["dev"]["debug"]): 
-            print("Load File Button was pressed! Opening File Dialog...")
+        print_debug("Load File Button was pressed! Opening File Dialog...")
 
         node_path = QFileDialog.getOpenFileName(self, "Select the Node File you want to open", "nodes")
 
@@ -144,8 +140,7 @@ class App_GUI(QMainWindow):
             self.node_content.setPlainText(decrypted_node)
 
     def on_clear_content_button_press(self):
-        if(config["dev"]["debug"]):
-            print("Clear Button pressed! clearing Node Content...")
+        print_debug("Clear Button pressed! clearing Node Content...")
 
         self.node_content.clear()
 
