@@ -1,12 +1,14 @@
-from defs import process_input, config
+from defs import config
+from defs.verify_input import verify_input
+
 from Crypto.Cipher import AES
 from base64 import b64decode
 import sys
 import binascii
 
-def load_file(node_name, node_key, node_address = "", node_signature = "", node_path = ""):
+def load_node(node_name, node_key, node_address = "", node_signature = "", node_path = ""):
     try:
-        node_key_bytes = process_input(node_key, node_address)
+        node_key_bytes = verify_input(node_key, node_address)
 
         if node_path == "":
             node_path = f"nodes/{node_name}"
@@ -20,7 +22,7 @@ def load_file(node_name, node_key, node_address = "", node_signature = "", node_
                 print(f"Header: {header}")
                 print(f"File Version: {file_version}")
 
-            if header != config.header:
+            if header != config["dev"]["format_header"]:
                 raise ValueError("Invalid Header! The file read is not a CryptoDot file or the Header is invalid/corrupt!")
 
             # Set the nonce based on the file_version

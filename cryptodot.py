@@ -1,5 +1,5 @@
-from defs.new_node_file import new_file, write_file
-from defs.load_node_file import load_file
+from defs.new_node import new_node, write_node_file
+from defs.load_node import load_node
 from defs.gui import gui
 import pyperclip
 import sys
@@ -17,26 +17,6 @@ if __name__ == "__main__":
         operation = sys.argv[1]
 
         match operation:
-            case "encrypt" | "decrypt":
-                node_key = sys.argv[2]
-                node_address = sys.argv[3]
-                input_node_name = input("Node Name: ")
-
-                if(operation == "encrypt"):
-                    print("\nOperation: Encrypt New Node\n")
-                    node_name, cipher_nonce, cipher_text = new_file(input_node_name, node_key, node_address)
-
-                    write_file(f"nodes/{node_name}", cipher_nonce, cipher_text, True)
-            
-                else:
-                    node_signature = sys.argv[4]
-
-                    print("\nOperation: Decrypt Node\n")
-                    decrypted_node = load_file(input_node_name, node_key, node_address)
-
-                    pyperclip.copy(decrypted_node)
-                    print("Ok! Contents copied to Clipboard.")
-
             case "gui":
                 print("Opening GUI...\n")
                 gui()
@@ -44,6 +24,26 @@ if __name__ == "__main__":
             case "help":
                 print("CryptoDot.py 1.0 by kodachi41.\n")
                 help_message()
+
+            case "encrypt" | "decrypt":
+                node_key = sys.argv[2]
+                node_address = sys.argv[3]
+                input_node_name = input("Node Name: ")
+
+                if(operation == "encrypt"):
+                    print("\nOperation: Encrypt New Node\n")
+                    node_name, cipher_nonce, cipher_text = new_node(input_node_name, node_key, node_address)
+
+                    write_node_file(f"nodes/{node_name}", cipher_nonce, cipher_text, True)
+            
+                else:
+                    node_signature = sys.argv[4]
+
+                    print("\nOperation: Decrypt Node\n")
+                    decrypted_node = load_node(input_node_name, node_key, node_address)
+
+                    pyperclip.copy(decrypted_node)
+                    print("Ok! Contents copied to Clipboard.")
 
             case _:
                 print("Invalid Operation! See the command below for correct usage:\n")

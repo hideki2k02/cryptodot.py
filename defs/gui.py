@@ -7,8 +7,8 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel,  QHBoxLayout, QVB
 from PyQt5.QtWidgets import QFileDialog, QLineEdit , QPushButton, QPlainTextEdit, QInputDialog
 
 # New File and Load File Functions
-from defs.new_node_file import new_file, write_file
-from defs.load_node_file import load_file
+from defs.new_node import new_node, write_node_file
+from defs.load_node import load_node
 
 # Others
 from defs import config
@@ -20,7 +20,7 @@ class App_GUI(QMainWindow):
         # I dont know what the fuck this does, but i guess its basically the Main() in C#
         super().__init__()
 
-        # print(config)
+        # print(program_config)
 
         self.window = QWidget()
         self.inputs_layout = QVBoxLayout()
@@ -108,7 +108,7 @@ class App_GUI(QMainWindow):
         if(config["dev"]["debug"]):
             print("Save File Button was pressed! Opening File Dialog...")
 
-        node_name_bytes, cipher_nonce, cipher_text = new_file(None, 
+        node_name_bytes, cipher_nonce, cipher_text = new_node(None, 
             self.node_key.text(), 
             self.node_address.text(), 
             self.node_content.toPlainText()
@@ -119,7 +119,7 @@ class App_GUI(QMainWindow):
         )
 
         if node_path[0] != "":
-            write_file(node_path[0], cipher_nonce, cipher_text, False)
+            write_node_file(node_path[0], cipher_nonce, cipher_text, False)
 
     def on_load_file_button_press(self):
         if(config["dev"]["debug"]): 
@@ -130,7 +130,7 @@ class App_GUI(QMainWindow):
         if node_path[0] != "":
             node_signature = QInputDialog.getText(self, "Insert the File Signature:", "File Signature:")
             
-            decrypted_node = load_file(None, 
+            decrypted_node = load_node(None, 
                 self.node_key.text(), 
                 self.node_address.text(), 
                 node_signature[0], 

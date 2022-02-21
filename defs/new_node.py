@@ -1,4 +1,6 @@
-from defs import process_input, config
+from defs import config
+from defs.verify_input import verify_input
+
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 from base64 import b64encode
@@ -7,9 +9,9 @@ import os
 
 current_format_version = chr(0x01)
 
-def new_file(node_name, node_key, node_address, node_content = pyperclip.paste()):
+def new_node(node_name, node_key, node_address, node_content = pyperclip.paste()):
     # Hash is in cSHAKE256
-    node_key_bytes = process_input(node_key, node_address)
+    node_key_bytes = verify_input(node_key, node_address)
 
     # If Nodes folder does not exist, create one
     if not os.path.isdir("nodes"):
@@ -17,7 +19,7 @@ def new_file(node_name, node_key, node_address, node_content = pyperclip.paste()
 
     # Generates a random cSHAKE256 hash if no node_name parameter was received
     if node_name == None:
-        random_hash = process_input(f"{get_random_bytes(16)}", f"{get_random_bytes(16)}")
+        random_hash = verify_input(f"{get_random_bytes(16)}", f"{get_random_bytes(16)}")
         node_name = random_hash.hex()
 
     if node_content == None:
@@ -44,7 +46,7 @@ def new_file(node_name, node_key, node_address, node_content = pyperclip.paste()
 
 
 
-def write_file(node_file_path, cipher_nonce, cipher_text, cli_overwrite_warning):
+def write_node_file(node_file_path, cipher_nonce, cipher_text, cli_overwrite_warning):
     if(config["dev"]["debug"]):
         print(f"\nFile Path Passed to write_file: {node_file_path}")
 
