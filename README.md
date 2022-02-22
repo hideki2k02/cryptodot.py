@@ -50,6 +50,8 @@ Just don't use something simple as your Birthday, your Friends may guess it.
 - [X] Rework the file format and how the functions work
 - [X] Implement the GUI
 - [X] Implement a Clear Node Button
-- [ ] Implement a decent config system using TOML
+- [X] Implement a decent config system using TOML
+- [ ] Implement a toolbar (because why not?)
+- [ ] Implement a Config GUI
 - [ ] Implement Dark Mode
 - [ ] Fix my code

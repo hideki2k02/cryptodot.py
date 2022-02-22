@@ -28,7 +28,7 @@ def new_node(node_name, node_key, node_address, node_content = pyperclip.paste()
     
     print_debug(f"Node Key: {node_key_bytes.hex()}", False)
     print_debug(f"Node Name: {node_name}", False)
-    print_debug(f"Node Content: {node_content}\n")
+    print_debug(f"Node Content: {node_content}")
 
     print_debug("Generating Cipher... ", False)
 

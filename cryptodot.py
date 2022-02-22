@@ -1,6 +1,6 @@
 from defs.new_node import new_node, write_node_file
 from defs.load_node import load_node
-from defs.gui import gui
+from defs.gui import initialize_gui
 import pyperclip
 import sys
 
@@ -19,7 +19,7 @@ if __name__ == "__main__":
         match operation:
             case "gui":
                 print("Opening GUI...\n")
-                gui()
+                initialize_gui()
 
             case "help":
                 print("CryptoDot.py 1.0 by kodachi41.\n")

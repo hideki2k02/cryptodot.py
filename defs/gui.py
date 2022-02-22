@@ -23,33 +23,43 @@ class App_GUI(QMainWindow):
 
         # print(program_config)
 
+        # Create the Base Layout
         self.window = QWidget()
         self.inputs_layout = QVBoxLayout()
         self.buttons_layout = QHBoxLayout()
 
+        # Set the Layout Alignment
         self.inputs_layout.setAlignment(Qt.AlignTop)
 
-        # Node Key LineEdit, Label and its events (Node Key is the Password)
+        # Toolbar (To be implemented)
+
+        # Node Key Label (Node Key is the Password)
         self.node_key_label = QLabel("Node Key (Password)")
-        self.node_key = QLineEdit()
-        self.node_key.setEchoMode(QLineEdit.Password)
         self.inputs_layout.addWidget(self.node_key_label)
-        self.inputs_layout.addWidget(self.node_key)
-        self.node_key.textEdited.connect(self.validate_form)
 
-        # Node Address LineEdit, Label and its events (Node Address is an extra parameter for the Hashes)
+        # Node Key LineEdit and its events
+        self.node_key_lineEdit = QLineEdit()
+        self.node_key_lineEdit.setEchoMode(QLineEdit.Password)
+        self.node_key_lineEdit.textEdited.connect(self.validate_form)
+        self.inputs_layout.addWidget(self.node_key_lineEdit)
+
+        # Node Address Label (Node Address is an extra parameter for the Hashes)
         self.node_address_label = QLabel("Node Address (Hash Modifier)")
-        self.node_address = QLineEdit()
-        self.node_address.setEchoMode(QLineEdit.Password)
         self.inputs_layout.addWidget(self.node_address_label)
-        self.inputs_layout.addWidget(self.node_address)
-        self.node_address.textEdited.connect(self.validate_form)
 
-        # Node Content LineEdit, Label (Node Address is an extra parameter for the Hashes)
+        # Node Address LineEdit and its events
+        self.node_address_lineEdit = QLineEdit()
+        self.node_address_lineEdit.setEchoMode(QLineEdit.Password)
+        self.node_address_lineEdit.textEdited.connect(self.validate_form)
+        self.inputs_layout.addWidget(self.node_address_lineEdit)
+
+        # Node Content Label (Node Address is an extra parameter for the Hashes)
         self.node_content_label = QLabel("Node Content")
-        self.node_content = QPlainTextEdit()
         self.inputs_layout.addWidget(self.node_content_label)
-        self.inputs_layout.addWidget(self.node_content)
+
+        # Node Content Text Box
+        self.node_content_textEdit = QPlainTextEdit()
+        self.inputs_layout.addWidget(self.node_content_textEdit)
 
         # Save Button and its Events
         self.save_file_button = QPushButton("Save File")
@@ -96,8 +106,8 @@ class App_GUI(QMainWindow):
         self.show()
 
     def validate_form(self):
-        valid_key = len(self.node_key.text()) >= 3
-        valid_address = len(self.node_address.text()) >= 3
+        valid_key = len(self.node_key_lineEdit.text()) >= 3
+        valid_address = len(self.node_address_lineEdit.text()) >= 3
 
         self.save_file_button.setEnabled(valid_key and valid_address)
         self.load_file_button.setEnabled(valid_key and valid_address)
@@ -107,9 +117,9 @@ class App_GUI(QMainWindow):
         print_debug("Save File Button was pressed! Opening File Dialog...")
 
         node_name_bytes, cipher_nonce, cipher_text, cipher_signature = new_node(None, 
-            self.node_key.text(), 
-            self.node_address.text(), 
-            self.node_content.toPlainText()
+            self.node_key_lineEdit.text(), 
+            self.node_address_lineEdit.text(), 
+            self.node_content_textEdit.toPlainText()
         )
 
         node_path = QFileDialog.getSaveFileName(self, "ITS NOT RECOMMENDED TO CHANGE THE FILE NAME", 
@@ -133,8 +143,8 @@ class App_GUI(QMainWindow):
             try:
                 decrypted_node, node_signature, cipher_object = load_node(
                     None, # Would be node_name if it was CLI Mode
-                    self.node_key.text(), 
-                    self.node_address.text(), 
+                    self.node_key_lineEdit.text(), 
+                    self.node_address_lineEdit.text(), 
                     None, # Would be node_signature if it was CLI Mode
                     node_path[0]
                 )
@@ -142,12 +152,13 @@ class App_GUI(QMainWindow):
                 print_debug(f"Node Signature on File: {node_signature}")                
 
                 if node_signature == None:
-                    node_signature = QInputDialog.getText(self, "Insert the File Signature:", "File Signature:")
+                    # QInputDialog.getText() returns a "string" and a "boolean", we only want the "string" for now
+                    node_signature = QInputDialog.getText(self, "Insert the File Signature:", "File Signature:")[0]
 
-                print_debug(f"Passed Node Signature: {node_signature[0]}")
-                verify_node(cipher_object, node_signature[0])
+                print_debug(f"Passed Node Signature: {node_signature}")
+                verify_node(cipher_object, node_signature)
 
-                self.node_content.setPlainText(decrypted_node)
+                self.node_content_textEdit.setPlainText(decrypted_node)
 
             # In case it fails (probably invalid key)
             except:
@@ -159,9 +170,9 @@ class App_GUI(QMainWindow):
     def on_clear_content_button_press(self):
         print_debug("Clear Button pressed! clearing Node Content...")
 
-        self.node_content.clear()
+        self.node_content_textEdit.clear()
 
-def gui():
+def initialize_gui():
     app = QApplication(sys.argv)
     keep_window_open = App_GUI()
 
