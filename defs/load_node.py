@@ -1,10 +1,13 @@
+# Defs
 from defs import config
 from defs.process_input import process_input
 from defs.japa4551 import *
 
+# Cryptography Related
 from Crypto.Cipher import AES
 from base64 import b64decode
-import sys
+
+# Others
 import binascii
 
 def load_node(node_name, node_key, node_address = "", node_signature = "NONE", node_path = ""):

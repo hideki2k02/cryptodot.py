@@ -45,13 +45,18 @@ Just don't use something simple as your Birthday, your Friends may guess it.
 
 **[TOML 0.10.2](https://pypi.org/project/toml/) for generating the config file**
 
+**[Gregor Cresnar](https://www.flaticon.com/authors/gregor-cresnar) for the Icons**
+
+**[MattLeschuck](https://pixabay.com/sound-effects/success-bell-6776/) for the "Success" Sound Effect**
+
 ## To-do list (Feel free to suggest anything)
 - [X] Finish the base code
 - [X] Rework the file format and how the functions work
 - [X] Implement the GUI
 - [X] Implement a Clear Node Button
 - [X] Implement a decent config system using TOML
-- [ ] Implement a toolbar (because why not?)
+- [X] Implement a toolbar (because why not?)
+- [ ] Make the GUI code more readable by splitting it into multiple files?
 - [ ] Implement a Config GUI
 - [ ] Implement Dark Mode
 - [ ] Fix my code

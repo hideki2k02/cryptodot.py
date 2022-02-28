@@ -1,9 +1,13 @@
-from defs.process_input import process_input
-from defs.japa4551 import *
-
+# Cryptography Related
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 from base64 import b64encode
+
+# Defs
+from defs.process_input import process_input
+from defs.japa4551 import *
+
+# Others
 import pyperclip
 import os
 
