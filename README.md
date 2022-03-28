@@ -45,9 +45,13 @@ Just don't use something simple as your Birthday, your Friends may guess it.
 
 **[TOML 0.10.2](https://pypi.org/project/toml/) for generating the config file**
 
-**[Gregor Cresnar](https://www.flaticon.com/authors/gregor-cresnar) for the Icons**
+**[Gregor Cresnar](https://www.flaticon.com/authors/gregor-cresnar) for the Toolbar Icons**
+
+**[FreePik](https://www.freepik.com/) for the placeholder logo (Original Author not found)**
 
 **[MattLeschuck](https://pixabay.com/sound-effects/success-bell-6776/) for the "Success" Sound Effect**
+
+**[MixKit](https://mixkit.co/) for the "Electric Buzz Glitch" Sound Effect (Original Author not found)**
 
 ## To-do list (Feel free to suggest anything)
 - [X] Finish the base code

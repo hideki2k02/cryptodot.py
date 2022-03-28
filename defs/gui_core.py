@@ -1,18 +1,21 @@
 # PyQt5 GUI Layout
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel,  QHBoxLayout, QVBoxLayout, QWidget
-from PyQt5.QtGui import QIcon
 
 # PyQt5 User Input
 from PyQt5.QtWidgets import QLineEdit , QPushButton, QPlainTextEdit, QFileDialog, QInputDialog
 from PyQt5.QtWidgets import QAction
+
+# PyQt5 Fancy-Stuff
+from PyQt5.QtGui import QIcon
+from PyQt5 import QtMultimedia
 
 # Node-Related
 from defs.new_node import new_node, write_node_file
 from defs.load_node import load_node, verify_node
 
 # Defs
-from defs import config, program_version
+from defs import config, program_version, images_path, sounds_path
 from defs.japa4551 import *
 
 # Others
@@ -36,17 +39,17 @@ class App_GUI(QMainWindow):
         self.toolbar.setMovable(False)
 
         # Save Node Button
-        self.save_node_button = QAction(QIcon("./defs/gui/icons/save.png"), "Save Node", self)
+        self.save_node_button = QAction(QIcon(images_path + "save.png"), "Save Node", self)
         self.save_node_button.setEnabled(False)
         self.save_node_button.triggered.connect(self.on_save_node_button_press)
 
         # Load Node Button
-        self.load_node_button = QAction(QIcon("./defs/gui/icons/folder.png"), "Load Node", self)
+        self.load_node_button = QAction(QIcon(images_path + "folder.png"), "Load Node", self)
         self.load_node_button.setEnabled(False)
         self.load_node_button.triggered.connect(self.on_load_node_button_press)
 
         # Settings Button
-        self.settings_button = QAction(QIcon("./defs/gui/icons/settings.png"), "Load Node", self)
+        self.settings_button = QAction(QIcon(images_path + "settings.png"), "Load Node", self)
         self.settings_button.setEnabled(True)
         # options_button.triggered.connect(buttons_action.on_save_node_button_pressed)
 
@@ -104,7 +107,6 @@ class App_GUI(QMainWindow):
 
         # Clear Button and its Events
         self.clear_content_button = QPushButton("Clear")
-        self.clear_content_button.setEnabled(False)
         self.clear_content_button.clicked.connect(self.on_clear_content_button_press)
         self.buttons_layout.addWidget(self.clear_content_button)
         
@@ -117,7 +119,7 @@ class App_GUI(QMainWindow):
         self.resize(500, 500)
         self.setMinimumSize(325, 300)
         self.setWindowTitle(f"CryptoDot.py - Version {program_version}")
-        # self.setWindowIcon(QIcon('data/icons8-virus-free-50.png'))
+        self.setWindowIcon(QIcon(images_path + 'cryptography.png'))
 
         # Checks if the boolean "dark_mode" is true, if so use the "dark theme"
         if config["user"]["dark_mode"]:
@@ -170,7 +172,9 @@ class App_GUI(QMainWindow):
                 node_path[0]
                 )
 
-                print_debug(f"Node Signature on File: {node_signature}")                
+                print_debug(f"Node Signature on File: {node_signature}")
+
+                QtMultimedia.QSound.play(sounds_path + "success_bell-6776.wav")                
 
                 if node_signature == None:
                         # QInputDialog.getText() returns a "string" and a "boolean", we only want the "string" for now
@@ -183,6 +187,7 @@ class App_GUI(QMainWindow):
 
             # In case it fails (probably invalid key)
             except:
+                QtMultimedia.QSound.play(sounds_path + "mixkit-electric-buzz-glitch-2594.wav")
                 return
 
         else:
