@@ -34,33 +34,5 @@ Nodes are just Fancy names. Thats all.
 
 Just don't use something simple as your Birthday, your Friends may guess it.
 
-## Credits
-**10c8 (My Teacher)**
-
-**[pyperclip 1.8.2](https://pypi.org/project/pyperclip/) for Clipboard Access (CLI Mode)**
-
-**[pyqt5 5.15.6](https://pypi.org/project/PyQt5/) for GUI**
-
-**[PyCryptodome 3.12.0](https://pypi.org/project/pycryptodome/) for generating Hashes and AES**
-
-**[TOML 0.10.2](https://pypi.org/project/toml/) for generating the config file**
-
-**[Gregor Cresnar](https://www.flaticon.com/authors/gregor-cresnar) for the Toolbar Icons**
-
-**[FreePik](https://www.freepik.com/) for the placeholder logo (Original Author not found)**
-
-**[MattLeschuck](https://pixabay.com/sound-effects/success-bell-6776/) for the "Success" Sound Effect**
-
-**[MixKit](https://mixkit.co/) for the "Electric Buzz Glitch" Sound Effect (Original Author not found)**
-
-## To-do list (Feel free to suggest anything)
-- [X] Finish the base code
-- [X] Rework the file format and how the functions work
-- [X] Implement the GUI
-- [X] Implement a Clear Node Button
-- [X] Implement a decent config system using TOML
-- [X] Implement a toolbar (because why not?)
-- [ ] Make the GUI code more readable by splitting it into ~~multiple files~~ classes (Currently working)
-- [ ] Implement a Config GUI (Next Plan)
-- [ ] Implement Dark Mode
-- [ ] Fix my code
+### [Credits](https://github.com/japa4551/cryptodot.py/blob/main/CREDITS.md)
+### [TO-DO List](https://github.com/japa4551/cryptodot.py/blob/main/TO-DO.md)

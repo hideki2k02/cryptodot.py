@@ -1,7 +1,4 @@
 # PyQt5 GUI Layout
-from asyncio.windows_events import NULL
-from tkinter.tix import PopupMenu
-from tracemalloc import start
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel,  QHBoxLayout, QVBoxLayout, QWidget
 
@@ -25,14 +22,6 @@ from defs.japa4551 import *
 import sys
 
 
-class Button():
-    def Create(window, layout, button_name):
-        # Defines the button
-        window.button_name = QAction(button_name, window)
-
-        layout.addWidget(window.button_name)
-
-
 class Toolbar():
     def Create(widget):
         # Creates the Toolbar
@@ -49,6 +38,68 @@ class Toolbar():
         return action
 
 
+class Button():
+    def CreateLineEdit(button_name, action, destination_layout, return_layout=False):
+        # Creates the Layout
+        layout = QHBoxLayout()
+
+        # Creates the Button Label and adds it to the button_layout
+        label = QLabel(button_name)
+        layout.addWidget(label)
+
+        # Creates the LineEdit, defines it action (if possible) and adds it to the button_layout
+        lineEdit = QLineEdit()
+
+        if action != None:
+            lineEdit.textEdited.connect(action)
+
+        layout.addWidget(lineEdit)
+
+        destination_layout.addLayout(layout)
+
+        if return_layout:
+            return lineEdit, layout
+
+        else:
+            return lineEdit
+
+    def CreatePasswordInput(button_name, action, destination_layout, start_shown=False):
+        def show_hide_password(boolean):
+            if boolean:
+                lineEdit.setEchoMode(QLineEdit.Normal)
+                show_password_button.setIcon(QIcon(images_path + "hidden.png"))
+
+
+            else: 
+                lineEdit.setEchoMode(QLineEdit.Password)
+                show_password_button.setIcon(QIcon(images_path + "eye.png"))
+
+
+        lineEdit, lineEdit_layout = Button.CreateLineEdit(button_name, action, destination_layout, True)
+        lineEdit.setEchoMode(QLineEdit.Password)
+
+        # Creates the show_password_button and makes it a toggle button
+        show_password_button = QPushButton()
+        show_password_button.setCheckable(True)
+
+        # Runs the show_hide_password check to set the icon
+        show_hide_password(start_shown)
+
+        # If the Button is Checked, Show/Hide the Password and Change the Button's icon
+        show_password_button.clicked.connect(
+            show_hide_password, show_password_button.isChecked()
+        )
+
+        show_password_button.setStyleSheet("""
+            padding: 0;
+            border: none;
+            background: none;
+        """)
+
+        lineEdit_layout.addWidget(show_password_button)
+
+        return lineEdit
+
 class App_GUI(QMainWindow):
     def __init__(self):
         # I dont know what the fuck this does, but i guess its basically the Main() in C#
@@ -57,8 +108,6 @@ class App_GUI(QMainWindow):
         # (TLDR still dont know what the fuck this does exactly)
         super().__init__()
 
-        # print(program_config)
-
         # Creates the Base Layout
         self.window = QWidget()
         self.base_layout = QVBoxLayout()
@@ -66,65 +115,54 @@ class App_GUI(QMainWindow):
 
         # Creates the Toolbar and defines all Actions
         Toolbar.Create(self)
+
+        # Save Node Button
         self.save_node_button = Toolbar.AddAction(
             "Save Node", (images_path + "save.png"), self.on_save_node_button_press,
             self, start_enabled=False
         )
 
+        # Load Node Button
         self.load_node_button = Toolbar.AddAction(
             "Load Node", (images_path + "folder.png"), self.on_load_node_button_press,
             self, start_enabled=False
         )
 
+        # Settings Button
         Toolbar.AddAction(
             "Settings", (images_path + "settings.png"), self.on_load_node_button_press,
             self, start_enabled=True
         )
 
-        # Set the Layout Alignment
-        self.base_layout.setAlignment(Qt.AlignTop)
 
-        # Node Key Label (Node Key is the Password)
-        self.node_key_label = QLabel("Node Key (Password)")
-        self.base_layout.addWidget(self.node_key_label)
 
-        # Node Key LineEdit and its events
-        self.node_key_lineEdit = QLineEdit()
-        self.node_key_lineEdit.setEchoMode(QLineEdit.Password)
-        self.node_key_lineEdit.textEdited.connect(self.validate_form)
-        self.base_layout.addWidget(self.node_key_lineEdit)
+        # Node Key LineEdit
+        self.node_key_field = Button.CreatePasswordInput(
+            "Node Key (Password)", self.validate_form, self.base_layout,
+        )
 
-        self.checkbox = QCheckBox("Sheesh")
-        self.base_layout.addWidget(self.checkbox)
-
-        # Node Address Label (Node Address is an extra parameter for the Hashes)
-        self.node_address_label = QLabel("Node Address (Hash Modifier)")
-        self.base_layout.addWidget(self.node_address_label)
-
-        # Node Address LineEdit and its events
-        self.node_address_lineEdit = QLineEdit()
-        self.node_address_lineEdit.setEchoMode(QLineEdit.Password)
-        self.node_address_lineEdit.textEdited.connect(self.validate_form)
-        self.base_layout.addWidget(self.node_address_lineEdit)
-
-        # Node Signatire Label (Node Signature is used mainly to verify the File Authenticity)
-        self.node_signature_label = QLabel("Node Signature")
-        self.base_layout.addWidget(self.node_signature_label)
+        # Node Address LineEdit
+        self.node_address_field = Button.CreatePasswordInput(
+            "Node Address (Password)", self.validate_form, self.base_layout,
+        )
 
         # Node Signature LineEdit
-        self.node_signature_lineEdit = QLineEdit()
-        self.node_signature_lineEdit.setReadOnly(True)
-        self.node_signature_lineEdit.setText("NONE")
+        self.node_signature_lineEdit = Button.CreatePasswordInput(
+            "Node Signature", None, self.base_layout, start_shown=True
+        )
+
+        self.node_signature_lineEdit.setPlaceholderText("NONE")
         self.node_signature_lineEdit.setAlignment(Qt.AlignCenter)
-        self.base_layout.addWidget(self.node_signature_lineEdit)
+
+
 
         # Node Content Label (Node Address is an extra parameter for the Hashes)
         self.node_content_label = QLabel("Node Content")
-        self.base_layout.addWidget(self.node_content_label)
+        # self.base_layout.addWidget(self.node_content_label)
 
         # Node Content Text Box
         self.node_content_textEdit = QPlainTextEdit()
-        self.base_layout.addWidget(self.node_content_textEdit)
+        # self.base_layout.addWidget(self.node_content_textEdit)
 
         # Verify Button and its Events
         self.verify_node_button = QPushButton("Verify Signature")
@@ -137,6 +175,9 @@ class App_GUI(QMainWindow):
         self.clear_content_button.clicked.connect(self.on_clear_content_button_press)
         self.buttons_layout.addWidget(self.clear_content_button)
         
+        # Set the Layout Alignment
+        self.base_layout.setAlignment(Qt.AlignTop)
+
         # This will add the button_layout below the base_layout
         self.base_layout.addLayout(self.buttons_layout)
         self.window.setLayout(self.base_layout)
@@ -226,8 +267,8 @@ class App_GUI(QMainWindow):
         self.node_content_textEdit.clear()
 
     def validate_form(self):
-        valid_key = len(self.node_key_lineEdit.text()) >= 3
-        valid_address = len(self.node_address_lineEdit.text()) >= 3
+        valid_key = len(self.node_key_field.text()) >= 3
+        valid_address = len(self.node_address_field.text()) >= 3
 
         self.save_node_button.setEnabled(valid_key and valid_address)
         self.load_node_button.setEnabled(valid_key and valid_address)
