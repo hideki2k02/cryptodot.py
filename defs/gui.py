@@ -1,10 +1,13 @@
 # PyQt5 GUI Layout
+from asyncio.windows_events import NULL
+from tkinter.tix import PopupMenu
+from tracemalloc import start
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel,  QHBoxLayout, QVBoxLayout, QWidget
 
 # PyQt5 User Input
 from PyQt5.QtWidgets import QLineEdit , QPushButton, QPlainTextEdit, QFileDialog, QInputDialog
-from PyQt5.QtWidgets import QAction
+from PyQt5.QtWidgets import QAction, QMenu, QCheckBox
 
 # PyQt5 Fancy-Stuff
 from PyQt5.QtGui import QIcon
@@ -22,9 +25,36 @@ from defs.japa4551 import *
 import sys
 
 
+class Button():
+    def Create(window, layout, button_name):
+        # Defines the button
+        window.button_name = QAction(button_name, window)
+
+        layout.addWidget(window.button_name)
+
+
+class Toolbar():
+    def Create(widget):
+        # Creates the Toolbar
+        widget.toolbar = widget.addToolBar("Toolbar")
+        widget.toolbar.setMovable(False)
+
+    def AddAction(action_name, icon_path, action_on_triggered, window, start_enabled):
+        # It looks cleaner i guess
+        action = QAction(QIcon(icon_path), action_name, window)
+        action.setEnabled(start_enabled)
+        action.triggered.connect(action_on_triggered)
+        window.toolbar.addAction(action)
+
+        return action
+
+
 class App_GUI(QMainWindow):
     def __init__(self):
         # I dont know what the fuck this does, but i guess its basically the Main() in C#
+        
+        # I've done my research and im starting to understand 
+        # (TLDR still dont know what the fuck this does exactly)
         super().__init__()
 
         # print(program_config)
@@ -34,28 +64,22 @@ class App_GUI(QMainWindow):
         self.base_layout = QVBoxLayout()
         self.buttons_layout = QHBoxLayout()
 
-        # Creates the Toolbar
-        self.toolbar = self.addToolBar("Toolbar")
-        self.toolbar.setMovable(False)
+        # Creates the Toolbar and defines all Actions
+        Toolbar.Create(self)
+        self.save_node_button = Toolbar.AddAction(
+            "Save Node", (images_path + "save.png"), self.on_save_node_button_press,
+            self, start_enabled=False
+        )
 
-        # Save Node Button
-        self.save_node_button = QAction(QIcon(images_path + "save.png"), "Save Node", self)
-        self.save_node_button.setEnabled(False)
-        self.save_node_button.triggered.connect(self.on_save_node_button_press)
+        self.load_node_button = Toolbar.AddAction(
+            "Load Node", (images_path + "folder.png"), self.on_load_node_button_press,
+            self, start_enabled=False
+        )
 
-        # Load Node Button
-        self.load_node_button = QAction(QIcon(images_path + "folder.png"), "Load Node", self)
-        self.load_node_button.setEnabled(False)
-        self.load_node_button.triggered.connect(self.on_load_node_button_press)
-
-        # Settings Button
-        self.settings_button = QAction(QIcon(images_path + "settings.png"), "Load Node", self)
-        self.settings_button.setEnabled(True)
-        # options_button.triggered.connect(buttons_action.on_save_node_button_pressed)
-
-        self.toolbar.addAction(self.save_node_button)
-        self.toolbar.addAction(self.load_node_button)
-        self.toolbar.addAction(self.settings_button)
+        Toolbar.AddAction(
+            "Settings", (images_path + "settings.png"), self.on_load_node_button_press,
+            self, start_enabled=True
+        )
 
         # Set the Layout Alignment
         self.base_layout.setAlignment(Qt.AlignTop)
@@ -69,6 +93,9 @@ class App_GUI(QMainWindow):
         self.node_key_lineEdit.setEchoMode(QLineEdit.Password)
         self.node_key_lineEdit.textEdited.connect(self.validate_form)
         self.base_layout.addWidget(self.node_key_lineEdit)
+
+        self.checkbox = QCheckBox("Sheesh")
+        self.base_layout.addWidget(self.checkbox)
 
         # Node Address Label (Node Address is an extra parameter for the Hashes)
         self.node_address_label = QLabel("Node Address (Hash Modifier)")
@@ -106,7 +133,7 @@ class App_GUI(QMainWindow):
         self.buttons_layout.addWidget(self.verify_node_button)
 
         # Clear Button and its Events
-        self.clear_content_button = QPushButton("Clear")
+        self.clear_content_button = QPushButton("Clear Content")
         self.clear_content_button.clicked.connect(self.on_clear_content_button_press)
         self.buttons_layout.addWidget(self.clear_content_button)
         

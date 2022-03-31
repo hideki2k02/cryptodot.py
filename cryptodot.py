@@ -3,7 +3,7 @@ from defs.new_node import new_node, write_node_file
 from defs.load_node import load_node
 
 # GUI
-from defs.gui_core import initialize_gui as gui_initialize
+from defs.gui import initialize_gui
 
 # Others
 import pyperclip
@@ -24,7 +24,7 @@ if __name__ == "__main__":
         match operation:
             case "gui":
                 print("Opening GUI...\n")
-                gui_initialize()
+                initialize_gui()
 
             case "help":
                 print("CryptoDot.py 1.0 by kodachi41.\n")
