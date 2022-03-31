@@ -60,7 +60,7 @@ Just don't use something simple as your Birthday, your Friends may guess it.
 - [X] Implement a Clear Node Button
 - [X] Implement a decent config system using TOML
 - [X] Implement a toolbar (because why not?)
-- [ ] Make the GUI code more readable by splitting it into multiple files?
-- [ ] Implement a Config GUI
+- [ ] Make the GUI code more readable by splitting it into ~~multiple files~~ classes (Currently working)
+- [ ] Implement a Config GUI (Next Plan)
 - [ ] Implement Dark Mode
 - [ ] Fix my code
