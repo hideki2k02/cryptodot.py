@@ -44,7 +44,10 @@ def clear_button_pressed(self):
 def verify_node_signature_button_pressed(self):
     is_node_valid = verify_node(self.current_cipher_object, self.node_signature_field.text()),
 
-    if is_node_valid:
+    print_debug("Is Node Valid Result: ", is_node_valid)
+
+    # Idk why it returns a literal["OK"]
+    if is_node_valid[0] == "OK":
         PlaySound.Success()
 
     else:

@@ -76,10 +76,10 @@ def verify_node(cipher, signature):
         
         print("Ok! Signature is valid!")
 
-        return True
+        return "OK"
 
     except binascii.Error:
         print("Signature Check Failed: Invalid Hash!")
 
     except ValueError:
-            print("Signature Check Failed: Wrong Hash!")
+        print("Signature Check Failed: Wrong Hash!")
