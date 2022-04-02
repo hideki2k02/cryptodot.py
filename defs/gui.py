@@ -3,22 +3,25 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel,  QHBoxLayout, QVBoxLayout, QWidget
 
 # PyQt5 User Input
-from PyQt5.QtWidgets import QLineEdit , QPushButton, QPlainTextEdit, QFileDialog, QInputDialog
-from PyQt5.QtWidgets import QAction, QMenu, QCheckBox
+from PyQt5.QtWidgets import QLineEdit , QPushButton, QPlainTextEdit, QFileDialog
+from PyQt5.QtWidgets import QAction
 
 # PyQt5 Fancy-Stuff
 from PyQt5.QtGui import QIcon
-from PyQt5 import QtMultimedia
+
+# GUI Actions
+from defs.gui_actions import *
 
 # Node-Related
 from defs.new_node import new_node, write_node_file
-from defs.load_node import load_node, verify_node
+from defs.load_node import load_node
 
 # Defs
-from defs import config, program_version, images_path, sounds_path
+from defs import config, program_version, images_path
 from defs.japa4551 import *
 
 # Others
+from functools import partial
 import sys
 
 
@@ -28,30 +31,70 @@ class Toolbar():
         widget.toolbar = widget.addToolBar("Toolbar")
         widget.toolbar.setMovable(False)
 
-    def AddAction(action_name, icon_path, action_on_triggered, window, start_enabled):
+    def AddAction(action_name, icon_path, on_triggered, window, start_enabled):
         # It looks cleaner i guess
         action = QAction(QIcon(icon_path), action_name, window)
         action.setEnabled(start_enabled)
-        action.triggered.connect(action_on_triggered)
+
+        if on_triggered != None:
+            action.triggered.connect(on_triggered)
+            
         window.toolbar.addAction(action)
 
         return action
 
 
-class Button():
-    def CreateLineEdit(button_name, action, destination_layout, return_layout=False):
+class Inputs():
+    def CreateButton(input_name, action, destionation_layout, start_enabled=True):
+        # Creates the layout
+        layout = QVBoxLayout()
+
+        # Creates the button, check if its enabled, sets its action and adds it to the layout
+        button = QPushButton(input_name)
+        button.setEnabled(start_enabled)
+
+        if action != None:
+            button.clicked.connect(action)
+
+        layout.addWidget(button)
+        destionation_layout.addLayout(layout)
+
+        return button
+
+
+    def CreateTextEdit(input_name, action, destination_layout):
+        # Creates the layout
+        layout = QVBoxLayout()
+
+        # Creates the Label and adds it to the layout
+        label = QLabel(input_name)
+        layout.addWidget(label)
+
+        # Creates the TextEdit, defines it action (if possible) and adds it to the button_layout
+        textEdit = QPlainTextEdit()
+
+        if action != None:
+            textEdit.textEdited.connect(action)
+
+        layout.addWidget(textEdit)
+        destination_layout.addLayout(layout)
+        
+        return textEdit
+
+
+    def CreateLineEdit(input_name, action, destination_layout, return_layout=False):
         # Creates the Layout
         layout = QHBoxLayout()
 
-        # Creates the Button Label and adds it to the button_layout
-        label = QLabel(button_name)
+        # Creates the Label and adds it to the layout
+        label = QLabel(input_name)
         layout.addWidget(label)
 
         # Creates the LineEdit, defines it action (if possible) and adds it to the button_layout
         lineEdit = QLineEdit()
 
         if action != None:
-            lineEdit.textEdited.connect(action)
+            lineEdit.textChanged.connect(action)
 
         layout.addWidget(lineEdit)
 
@@ -63,7 +106,7 @@ class Button():
         else:
             return lineEdit
 
-    def CreatePasswordInput(button_name, action, destination_layout, start_shown=False):
+    def CreatePasswordInput(input_name, action, destination_layout, start_shown=False):
         def show_hide_password(boolean):
             if boolean:
                 lineEdit.setEchoMode(QLineEdit.Normal)
@@ -75,8 +118,7 @@ class Button():
                 show_password_button.setIcon(QIcon(images_path + "eye.png"))
 
 
-        lineEdit, lineEdit_layout = Button.CreateLineEdit(button_name, action, destination_layout, True)
-        lineEdit.setEchoMode(QLineEdit.Password)
+        lineEdit, lineEdit_layout = Inputs.CreateLineEdit(input_name, action, destination_layout, True)
 
         # Creates the show_password_button and makes it a toggle button
         show_password_button = QPushButton()
@@ -100,6 +142,7 @@ class Button():
 
         return lineEdit
 
+
 class App_GUI(QMainWindow):
     def __init__(self):
         # I dont know what the fuck this does, but i guess its basically the Main() in C#
@@ -111,10 +154,12 @@ class App_GUI(QMainWindow):
         # Creates the Base Layout
         self.window = QWidget()
         self.base_layout = QVBoxLayout()
-        self.buttons_layout = QHBoxLayout()
 
         # Creates the Toolbar and defines all Actions
         Toolbar.Create(self)
+
+        # Note to future self: partial() is the only way to pass arguments 
+        # to a function in .connect(event), you cant just .connect(foo(bar))
 
         # Save Node Button
         self.save_node_button = Toolbar.AddAction(
@@ -130,60 +175,54 @@ class App_GUI(QMainWindow):
 
         # Settings Button
         Toolbar.AddAction(
-            "Settings", (images_path + "settings.png"), self.on_load_node_button_press,
+            "Settings", (images_path + "settings.png"), None,
             self, start_enabled=True
         )
 
 
 
-        # Node Key LineEdit
-        self.node_key_field = Button.CreatePasswordInput(
-            "Node Key (Password)", self.validate_form, self.base_layout,
+        # Node Key (Key used to make the AES Cipher)
+        self.node_key_field = Inputs.CreatePasswordInput(
+            "Node Key (Password)", partial(validate_forms, self), self.base_layout,
         )
 
-        # Node Address LineEdit
-        self.node_address_field = Button.CreatePasswordInput(
-            "Node Address (Password)", self.validate_form, self.base_layout,
+        # Node Address (Extra parameter for the Hashes)
+        self.node_address_field = Inputs.CreatePasswordInput(
+            "Node Address (Salt)", partial(validate_forms, self), self.base_layout,
         )
 
-        # Node Signature LineEdit
-        self.node_signature_lineEdit = Button.CreatePasswordInput(
-            "Node Signature", None, self.base_layout, start_shown=True
+        # Node Signature (Signature for the AES Cipher, Check if it was not tampered)
+        self.node_signature_field = Inputs.CreatePasswordInput(
+            "Node Signature", partial(is_node_loaded, self), self.base_layout, 
+            start_shown=True
         )
 
-        self.node_signature_lineEdit.setPlaceholderText("NONE")
-        self.node_signature_lineEdit.setAlignment(Qt.AlignCenter)
+        self.node_signature_field.setPlaceholderText("NONE")
+        self.node_signature_field.setAlignment(Qt.AlignCenter)
+
+        # Node Content
+        self.node_content_field = Inputs.CreateTextEdit(
+            "Node Content", None, self.base_layout
+        )
 
 
 
-        # Node Content Label (Node Address is an extra parameter for the Hashes)
-        self.node_content_label = QLabel("Node Content")
-        # self.base_layout.addWidget(self.node_content_label)
+        # Verify Signature Button
+        self.verify_signature_button = Inputs.CreateButton(
+            "Verify Signature", partial(verify_node_signature_button_pressed, self), self.base_layout,
+            start_enabled=False
+        )
 
-        # Node Content Text Box
-        self.node_content_textEdit = QPlainTextEdit()
-        # self.base_layout.addWidget(self.node_content_textEdit)
+        # Clear Button
+        Inputs.CreateButton(
+            "Clear Everything", partial(clear_button_pressed, self), self.base_layout, 
+            start_enabled=True
+        )
 
-        # Verify Button and its Events
-        self.verify_node_button = QPushButton("Verify Signature")
-        self.verify_node_button.setEnabled(False)
-        # self.verify_node_button.clicked.connect(self.on_clear_content_button_press)
-        self.buttons_layout.addWidget(self.verify_node_button)
-
-        # Clear Button and its Events
-        self.clear_content_button = QPushButton("Clear Content")
-        self.clear_content_button.clicked.connect(self.on_clear_content_button_press)
-        self.buttons_layout.addWidget(self.clear_content_button)
-        
-        # Set the Layout Alignment
-        self.base_layout.setAlignment(Qt.AlignTop)
-
-        # This will add the button_layout below the base_layout
-        self.base_layout.addLayout(self.buttons_layout)
+        # Sets the Window layout and info (like minimum size, title and icon) Then displays it.
         self.window.setLayout(self.base_layout)
         self.setCentralWidget(self.window)
 
-        # Sets the Window info, like minimum size, title and icon; Then displays it.
         self.resize(500, 500)
         self.setMinimumSize(325, 300)
         self.setWindowTitle(f"CryptoDot.py - Version {program_version}")
@@ -204,24 +243,29 @@ class App_GUI(QMainWindow):
         
         self.show()
 
+
     def on_save_node_button_press(self):
-     print_debug("Save File Button was pressed! Opening File Dialog...")
+        print_debug("Save File Button was pressed! Opening File Dialog...")
 
-     node_name_bytes, cipher_nonce, cipher_text, cipher_signature = new_node(None, 
-          self.node_key_lineEdit.text(), 
-          self.node_address_lineEdit.text(), 
-          self.node_content_textEdit.toPlainText()
-     )
+        node_name_bytes, cipher_nonce, cipher_text, cipher_signature = new_node(None, 
+            self.node_key_field.text(), 
+            self.node_key_field.text(), 
+            self.node_content_field.toPlainText()
+        )
 
-     node_path = QFileDialog.getSaveFileName(self, "ITS NOT RECOMMENDED TO CHANGE THE FILE NAME", 
-          f"nodes/{node_name_bytes}"
-     )
+        node_path = QFileDialog.getSaveFileName(self, "ITS NOT RECOMMENDED TO CHANGE THE FILE NAME", 
+            f"nodes/{node_name_bytes}"
+        )
 
-     if node_path[0] != "":
-          write_node_file(node_path[0], cipher_nonce, cipher_text, cipher_signature, False)
+        if node_path[0] != "":
+            write_node_file(node_path[0], cipher_nonce, cipher_text, cipher_signature, False)
 
-     else:
-          print_debug("Node Creation Cancelled!")
+            PlaySound.Success()
+            self.node_signature_field.setText(cipher_signature)
+
+
+        else:
+            print_debug("Node Creation Cancelled!")
 
     def on_load_node_button_press(self):
         print_debug("Load File Button was pressed! Opening File Dialog...")
@@ -232,46 +276,28 @@ class App_GUI(QMainWindow):
             print_debug(f"Passed Node Path: {node_path[0]}")
 
             try:
-                decrypted_node, node_signature, cipher_object = load_node(
+                decrypted_node, node_signature, self.current_cipher_object = load_node(
                 None, # Would be node_name if it was CLI Mode
-                self.node_key_lineEdit.text(), 
-                self.node_address_lineEdit.text(), 
+                self.node_key_field.text(), 
+                self.node_address_field.text(), 
                 None, # Would be node_signature if it was CLI Mode
                 node_path[0]
                 )
 
                 print_debug(f"Node Signature on File: {node_signature}")
 
-                QtMultimedia.QSound.play(sounds_path + "success_bell-6776.wav")                
+                PlaySound.Success()
 
-                if node_signature == None:
-                        # QInputDialog.getText() returns a "string" and a "boolean", we only want the "string" for now
-                        node_signature = QInputDialog.getText(self, "Insert the File Signature:", "File Signature:")[0]
-
-                print_debug(f"Passed Node Signature: {node_signature}")
-                verify_node(cipher_object, node_signature)
-
-                self.node_content_textEdit.setPlainText(decrypted_node)
+                self.node_signature_field.setText(node_signature)
+                self.node_content_field.setPlainText(decrypted_node)
 
             # In case it fails (probably invalid key)
             except:
-                QtMultimedia.QSound.play(sounds_path + "mixkit-electric-buzz-glitch-2594.wav")
-                return
+                PlaySound.Failed()
 
         else:
             print_debug("Node Loading Cancelled!")
 
-    def on_clear_content_button_press(self):
-        print_debug("Clear Button pressed! clearing Node Content...")
-
-        self.node_content_textEdit.clear()
-
-    def validate_form(self):
-        valid_key = len(self.node_key_field.text()) >= 3
-        valid_address = len(self.node_address_field.text()) >= 3
-
-        self.save_node_button.setEnabled(valid_key and valid_address)
-        self.load_node_button.setEnabled(valid_key and valid_address)
 
 def initialize_gui():
     app = QApplication(sys.argv)

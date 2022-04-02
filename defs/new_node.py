@@ -68,4 +68,4 @@ def write_node_file(node_file_path, cipher_nonce, cipher_text, cipher_signature,
     file.write(f"{cipher_nonce}\n{cipher_text}")
     file.close()
 
-    print_debug("Node Created!")
+    print("Node Created!")

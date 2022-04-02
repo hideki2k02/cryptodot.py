@@ -14,7 +14,7 @@
 - [X] Better Folder Path
 
 2.2
-- [ ] Make the GUI code more readable by splitting it into ~~multiple files~~ classes (Currently working)
+- [X] Make the GUI code more readable by splitting it into multiple files
 - [ ] Implement a Config GUI (Next Plan)
 - [ ] Implement Dark Mode
 - [ ] Fix my code
