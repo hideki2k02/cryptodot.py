@@ -1,3 +1,14 @@
+# CRYPTODOT HAS BEEN PUT ON HIATUS, YOU SHOULD USE [KeePassXC](https://github.com/keepassxreboot/keepassxc)
+### CryptoDot in general has always been a pet project of mine. "My own Cryptography Program" that i knew it was "safe" from backdoors (did not take backdoors on the libraries as a possibility at the time) because i've built it. 
+
+However i've discovered far more robust/efficient alternatives that exists for FAR LONGER (Even before i could think straight) and that have stood the test of time, like [KeePassXC](https://github.com/keepassxreboot/keepassxc) (It is based on KeePass, which itself exists since 2003).
+
+Since i've mainly used CryptoDot to store Links/Passwords, KeePassXC is the _magnum opus_ for me (If compared to CryptoDot it is overkill), heck it even store files! (Fun Fact: Originally i was trying to create a File Encryptor) and have backups so its a win-win. 
+
+Well, goodbye for now. I've learned a lot with CryptoDot but i think it is time to accept defeat haha
+
+
+
 # CryptoDot.py: Revival of CryptoDot.JS
 
 Cryptography made simple, open-source, and free!
